@@ -21,6 +21,10 @@ contract Election {
     addCandidate('maja');
   }
 
+  event votedEvent (
+    uint indexed _candidateId
+  );
+
   function addCandidate (string memory _name) private {
     candidatesCount ++;
     candidates[candidatesCount] = Candidate(candidatesCount, _name, 0);
@@ -31,5 +35,6 @@ contract Election {
     require(_candidateId > 0 && _candidateId <= candidatesCount);
     voters[msg.sender] = true;
     candidates[_candidateId].voteCount ++;
+    emit votedEvent(_candidateId);
   }
 }

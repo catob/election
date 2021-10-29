@@ -27,6 +27,8 @@ App = {
       // Connect provider to interact with contract
       App.contracts.Election.setProvider(App.web3Provider);
 
+      App.listenForEvents();
+
       return App.render();
     });
   },
@@ -41,6 +43,18 @@ App = {
       $("#loader").show();
     }).catch(function (err) {
       console.error(err);
+    });
+  },
+
+  listenForEvents: function () {
+    App.contracts.Election.deployed().then(instance => {
+      instance.votedEvent({}, {
+        fromBlock: 0,
+        toBlock: 'latest',
+      }).watch((error, event) => {
+        console.log('event triggered', event);
+        App.render();
+      })
     });
   },
 
